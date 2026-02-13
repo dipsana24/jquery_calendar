@@ -190,6 +190,7 @@ $(function () {
 
                     <div class="task-actions">
                         <button class="icon-btn btn-edit" title="Edit"><i class="ph ph-pencil-simple"></i></button>
+                        <button class="icon-btn btn-delete" title="Delete"><i class="ph ph-trash"></i></button>
                     </div>
                 </div>
             `);
@@ -207,6 +208,17 @@ $(function () {
       $item.find(".btn-edit").on("click", (e) => {
         e.stopPropagation();
         openModal("edit", t);
+      });
+
+      // Delete
+      $item.find(".btn-delete").on("click", (e) => {
+        e.stopPropagation();
+        if (confirm("Are you sure you want to delete this task?")) {
+          deleteTask(t.id);
+          toast("Task deleted");
+          renderCalendar();
+          renderTasks();
+        }
       });
 
       $("#tasks").append($item);

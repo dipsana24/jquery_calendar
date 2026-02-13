@@ -230,6 +230,11 @@ strong {
     color: var(--text-main);
 }
 
+.icon-btn.btn-delete:hover {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
 /* --- Dashboard Grid --- */
 .dashboard-grid {
     display: grid;
