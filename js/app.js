@@ -386,4 +386,62 @@ $(function () {
   // Init
   renderCalendar();
   renderTasks();
+
+  // Small entrance animation for cards
+  $(function () {
+    $(".card").addClass("pop-in");
+  });
+
+  // Theme toggle (persists choice)
+  const THEME_KEY = "ui_theme_pref";
+  function applyTheme(theme) {
+    if (theme === "dark") {
+      $("body").addClass("dark");
+      $("#themeIcon").attr("class", "ph ph-moon");
+    } else {
+      $("body").removeClass("dark");
+      $("#themeIcon").attr("class", "ph ph-sun");
+    }
+  }
+
+  let savedTheme = localStorage.getItem(THEME_KEY);
+  if (!savedTheme) {
+    savedTheme =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+  }
+  applyTheme(savedTheme);
+
+  $("#themeToggle").on("click", function () {
+    savedTheme = savedTheme === "dark" ? "light" : "dark";
+    localStorage.setItem(THEME_KEY, savedTheme);
+    applyTheme(savedTheme);
+  });
+
+  // Card tilt effect on mouse move
+  $(document).on("mousemove", ".card", function (e) {
+    const $card = $(this);
+    const rect = this.getBoundingClientRect();
+    const x = e.clientX - rect.left; // x position within element
+    const y = e.clientY - rect.top; // y position within element
+
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const dx = (x - cx) / cx; // -1 .. 1
+    const dy = (y - cy) / cy; // -1 .. 1
+
+    const rotY = dx * 6; // rotate up to 6deg
+    const rotX = -dy * 6;
+
+    $card.css(
+      "transform",
+      `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(0)`,
+    );
+  });
+
+  $(document).on("mouseleave", ".card", function () {
+    $(this).css("transform", "");
+  });
 });

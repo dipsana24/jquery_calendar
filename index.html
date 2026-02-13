@@ -1,185 +1,222 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Calendar Task Manager</title>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Calendar Task Manager</title>
+    <!-- Google Fonts: Outfit (headings) and Inter (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Google Fonts: Outfit (headings) and Inter (body) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap"
-    rel="stylesheet" />
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-  <!-- Phosphor Icons -->
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Project CSS -->
+    <link rel="stylesheet" href="css/style.css" />
 
-  <!-- Project CSS -->
-  <link rel="stylesheet" href="css/style.css" />
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </head>
 
-  <!-- jQuery CDN -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-</head>
-
-<body>
-  <div class="app-container">
-    <header class="app-header">
-      <div class="logo">
-        <i class="ph-duotone ph-calendar-check"></i>
-        <h1>TaskFlow</h1>
-      </div>
-
-      <div class="header-actions">
-        <div class="search-wrapper">
-          <i class="ph ph-magnifying-glass"></i>
-          <input id="search" class="search-input" placeholder="Search tasks..." aria-label="Search tasks" />
-        </div>
-        <button id="btnToday" class="btn btn-secondary">
-          <i class="ph ph-calendar-blank"></i> Today
-        </button>
-      </div>
-    </header>
-
-    <main class="dashboard-grid">
-      <!-- Calendar Section -->
-      <section class="card calendar-card">
-        <header class="card-header calendar-header">
-          <div class="month-nav">
-            <button id="prevMonth" class="icon-btn" aria-label="Previous month">
-              <i class="ph ph-caret-left"></i>
-            </button>
-            <h2 id="monthTitle"></h2>
-            <button id="nextMonth" class="icon-btn" aria-label="Next month">
-              <i class="ph ph-caret-right"></i>
-            </button>
-          </div>
-        </header>
-
-        <div class="weekdays-grid">
-          <div>Sun</div>
-          <div>Mon</div>
-          <div>Tue</div>
-          <div>Wed</div>
-          <div>Thu</div>
-          <div>Fri</div>
-          <div>Sat</div>
+  <body>
+    <div class="bg-aurora" aria-hidden="true"></div>
+    <div class="app-container">
+      <header class="app-header">
+        <div class="logo">
+          <i class="ph-duotone ph-calendar-check"></i>
+          <h1>TaskFlow</h1>
         </div>
 
-        <div id="calendar" class="days-grid"></div>
-      </section>
-
-      <!-- Tasks Panel -->
-      <section class="card tasks-card">
-        <header class="card-header tasks-header">
-          <div>
-            <h2 id="selectedDateTitle">Select a date</h2>
-            <p class="subtitle" id="taskCount">No tasks</p>
+        <div class="header-actions">
+          <div class="search-wrapper">
+            <i class="ph ph-magnifying-glass"></i>
+            <input
+              id="search"
+              class="search-input"
+              placeholder="Search tasks..."
+              aria-label="Search tasks"
+            />
           </div>
-          <div class="header-controls" style="display: flex; gap: 12px; align-items: center;">
-            <div class="select-wrapper">
-              <select id="sortOrder" class="form-input" style="padding: 8px 12px; font-size: 13px;">
-                <option value="time">Sort by Time</option>
-                <option value="priority">Sort by Priority</option>
-              </select>
-              <i class="ph ph-caret-down select-icon" style="font-size: 14px;"></i>
-            </div>
-            <button id="btnOpenModal" class="btn btn-primary">
-              <i class="ph ph-plus"></i> New Task
-            </button>
-          </div>
-        </header>
-
-        <div id="tasks" class="tasks-list"></div>
-
-        <div id="empty" class="empty-state hidden">
-          <i class="ph-duotone ph-clipboard-text"></i>
-          <p>No tasks for this day.</p>
-          <button id="btnEmptyAdd" class="btn btn-sm btn-outline">
-            Add one now
+          <button id="btnToday" class="btn btn-secondary">
+            <i class="ph ph-calendar-blank"></i> Today
+          </button>
+          <button
+            id="themeToggle"
+            class="btn btn-ghost"
+            aria-label="Toggle theme"
+            title="Toggle theme"
+          >
+            <i id="themeIcon" class="ph ph-sun"></i>
           </button>
         </div>
-      </section>
-    </main>
-  </div>
-
-  <!-- Modal Backdrop -->
-  <div id="modal" class="modal-backdrop hidden">
-    <div class="modal-content">
-      <header class="modal-header">
-        <h3 id="modalTitle">New Task</h3>
-        <button id="btnClose" class="icon-btn" aria-label="Close modal">
-          <i class="ph ph-x"></i>
-        </button>
       </header>
 
-      <form id="taskForm">
-        <input type="hidden" id="taskId" />
+      <main class="dashboard-grid">
+        <!-- Calendar Section -->
+        <section class="card calendar-card">
+          <header class="card-header calendar-header">
+            <div class="month-nav">
+              <button
+                id="prevMonth"
+                class="icon-btn"
+                aria-label="Previous month"
+              >
+                <i class="ph ph-caret-left"></i>
+              </button>
+              <h2 id="monthTitle"></h2>
+              <button id="nextMonth" class="icon-btn" aria-label="Next month">
+                <i class="ph ph-caret-right"></i>
+              </button>
+            </div>
+          </header>
 
-        <div class="form-group">
-          <label for="title">Title</label>
-          <input id="title" class="form-input" required placeholder="What needs to be done?" />
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="time">Time</label>
-            <input id="time" class="form-input" type="time" />
+          <div class="weekdays-grid">
+            <div>Sun</div>
+            <div>Mon</div>
+            <div>Tue</div>
+            <div>Wed</div>
+            <div>Thu</div>
+            <div>Fri</div>
+            <div>Sat</div>
           </div>
+
+          <div id="calendar" class="days-grid"></div>
+        </section>
+
+        <!-- Tasks Panel -->
+        <section class="card tasks-card">
+          <header class="card-header tasks-header">
+            <div>
+              <h2 id="selectedDateTitle">Select a date</h2>
+              <p class="subtitle" id="taskCount">No tasks</p>
+            </div>
+            <div
+              class="header-controls"
+              style="display: flex; gap: 12px; align-items: center"
+            >
+              <div class="select-wrapper">
+                <select
+                  id="sortOrder"
+                  class="form-input"
+                  style="padding: 8px 12px; font-size: 13px"
+                >
+                  <option value="time">Sort by Time</option>
+                  <option value="priority">Sort by Priority</option>
+                </select>
+                <i
+                  class="ph ph-caret-down select-icon"
+                  style="font-size: 14px"
+                ></i>
+              </div>
+              <button id="btnOpenModal" class="btn btn-primary">
+                <i class="ph ph-plus"></i> New Task
+              </button>
+            </div>
+          </header>
+
+          <div id="tasks" class="tasks-list"></div>
+
+          <div id="empty" class="empty-state hidden">
+            <i class="ph-duotone ph-clipboard-text"></i>
+            <p>No tasks for this day.</p>
+            <button id="btnEmptyAdd" class="btn btn-sm btn-outline">
+              Add one now
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Modal Backdrop -->
+    <div id="modal" class="modal-backdrop hidden">
+      <div class="modal-content">
+        <header class="modal-header">
+          <h3 id="modalTitle">New Task</h3>
+          <button id="btnClose" class="icon-btn" aria-label="Close modal">
+            <i class="ph ph-x"></i>
+          </button>
+        </header>
+
+        <form id="taskForm">
+          <input type="hidden" id="taskId" />
+
           <div class="form-group">
-            <label for="priority">Priority</label>
+            <label for="title">Title</label>
+            <input
+              id="title"
+              class="form-input"
+              required
+              placeholder="What needs to be done?"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="time">Time</label>
+              <input id="time" class="form-input" type="time" />
+            </div>
+            <div class="form-group">
+              <label for="priority">Priority</label>
+              <div class="select-wrapper">
+                <select id="priority" class="form-input">
+                  <option value="Low">Low</option>
+                  <option value="Medium" selected>Medium</option>
+                  <option value="High">High</option>
+                </select>
+                <i class="ph ph-caret-down select-icon"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="status">Status</label>
             <div class="select-wrapper">
-              <select id="priority" class="form-input">
-                <option value="Low">Low</option>
-                <option value="Medium" selected>Medium</option>
-                <option value="High">High</option>
+              <select id="status" class="form-input">
+                <option value="Pending" selected>Pending</option>
+                <option value="Done">Completed</option>
               </select>
               <i class="ph ph-caret-down select-icon"></i>
             </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="status">Status</label>
-          <div class="select-wrapper">
-            <select id="status" class="form-input">
-              <option value="Pending" selected>Pending</option>
-              <option value="Done">Completed</option>
-            </select>
-            <i class="ph ph-caret-down select-icon"></i>
+          <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea
+              id="notes"
+              class="form-input"
+              rows="3"
+              placeholder="Add details..."
+            ></textarea>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="notes">Notes</label>
-          <textarea id="notes" class="form-input" rows="3" placeholder="Add details..."></textarea>
-        </div>
-
-        <footer class="modal-footer">
-          <button type="button" id="btnDelete" class="btn btn-danger hidden">
-            <i class="ph ph-trash"></i> Delete
-          </button>
-          <div class="spacer"></div>
-          <button type="button" id="btnCancel" class="btn btn-ghost">
-            Cancel
-          </button>
-          <button type="submit" class="btn btn-primary" id="btnSave">
-            Save Task
-          </button>
-        </footer>
-      </form>
+          <footer class="modal-footer">
+            <button type="button" id="btnDelete" class="btn btn-danger hidden">
+              <i class="ph ph-trash"></i> Delete
+            </button>
+            <div class="spacer"></div>
+            <button type="button" id="btnCancel" class="btn btn-ghost">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" id="btnSave">
+              Save Task
+            </button>
+          </footer>
+        </form>
+      </div>
     </div>
-  </div>
 
-  <!-- Toast Notification -->
-  <div id="toast" class="toast hidden">
-    <i class="ph-fill ph-check-circle"></i>
-    <span id="toastMsg">Action successful</span>
-  </div>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden">
+      <i class="ph-fill ph-check-circle"></i>
+      <span id="toastMsg">Action successful</span>
+    </div>
 
-  <!-- App Logic -->
-  <script src="js/app.js"></script>
-</body>
-
+    <!-- App Logic -->
+    <script src="js/app.js"></script>
+  </body>
 </html>
