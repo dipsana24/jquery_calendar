@@ -164,11 +164,24 @@ $(function () {
 
     $("#empty").addClass("hidden");
 
-    // Sort: Pending first, then by time
+    // Sort
+    const sortOrder = $("#sortOrder").val();
+
     tasks.sort((a, b) => {
-      if (a.status === b.status)
-        return (a.time || "").localeCompare(b.time || "");
-      return a.status === "Done" ? 1 : -1;
+      // Done items always at bottom
+      if (a.status !== b.status) {
+        return a.status === "Done" ? 1 : -1;
+      }
+
+      if (sortOrder === "priority") {
+        const pMap = { High: 3, Medium: 2, Low: 1 };
+        const pA = pMap[a.priority] || 2;
+        const pB = pMap[b.priority] || 2;
+        if (pA !== pB) return pB - pA; // Descending priority
+      }
+
+      // Default to time sort (or tie-breaker)
+      return (a.time || "").localeCompare(b.time || "");
     });
 
     tasks.forEach((t) => {
@@ -364,6 +377,10 @@ $(function () {
 
   $("#search").on("input", function () {
     renderTasks(); // Calendar stays, but tasks list updates
+  });
+
+  $("#sortOrder").on("change", function () {
+    renderTasks();
   });
 
   // Init
