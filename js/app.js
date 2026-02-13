@@ -215,7 +215,7 @@ $(function () {
         e.stopPropagation();
         if (confirm("Are you sure you want to delete this task?")) {
           deleteTask(t.id);
-          toast("Task deleted");
+          toast("Deleted!");
           renderCalendar();
           renderTasks();
         }
@@ -316,10 +316,10 @@ $(function () {
         createdAt: Date.now(),
         ...data,
       });
-      toast("Task created successfully");
+      toast("Saved!");
     } else {
       updateTask(id, data);
-      toast("Task updated successfully");
+      toast("Updated!");
     }
 
     closeModal();
@@ -333,7 +333,7 @@ $(function () {
 
     if (confirm("Are you sure you want to delete this task?")) {
       deleteTask(id);
-      toast("Task deleted", "error");
+      toast("Deleted!");
       closeModal();
       renderCalendar();
       renderTasks();
