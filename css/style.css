@@ -94,7 +94,7 @@ strong {
 
 .logo i {
   font-size: 32px;
-  color: var(--primary);
+  color: #8b0000; /* dark red icon to match new brand */
 }
 
 .logo h1 {
@@ -102,6 +102,7 @@ strong {
   font-weight: 700;
   margin: 0;
   letter-spacing: -0.5px;
+  color: #8b0000; /* dark red brand name */
 }
 
 .header-actions {
